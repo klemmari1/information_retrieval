@@ -1,5 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.metrics import precision_recall_fscore_support
@@ -33,12 +33,12 @@ with open('scores.csv', 'w', newline='') as csvfile:
         relevance = np.array(list(map(int, filter(None, f.read().split("\n")))))
 
         # init vectorizers
-        count_vectorizer = CountVectorizer()
+        hashing_vectorizer = HashingVectorizer(binary=True)
         tf_vectorizer = TfidfVectorizer(use_idf=False)
         tfidf_vectorizer = TfidfVectorizer()
 
         # prepare matrices
-        count_matrix = count_vectorizer.fit_transform(corpus)
+        hashing_matrix = hashing_vectorizer.fit_transform(corpus)
         tf_matrix = tf_vectorizer.fit_transform(corpus)
         tfidf_matrix = tfidf_vectorizer.fit_transform(corpus)
 
@@ -46,10 +46,10 @@ with open('scores.csv', 'w', newline='') as csvfile:
 
         # Binary representation
         # Euclidean distance
-        esim = np.array(euclidean_distances(count_matrix[len(corpus)-1], count_matrix[0:(len(corpus)-1)])[0])
+        esim = np.array(euclidean_distances(hashing_matrix[len(corpus)-1], hashing_matrix[0:(len(corpus)-1)])[0])
         #etopRelevant = esim.argsort()[:10]+1
         # Cosine similarity measure
-        csim = np.array(cosine_similarity(count_matrix[len(corpus)-1], count_matrix[0:(len(corpus)-1)])[0])
+        csim = np.array(cosine_similarity(hashing_matrix[len(corpus)-1], hashing_matrix[0:(len(corpus)-1)])[0])
         #ctopRelevant = csim.argsort()[-10:][::-1]+1
         #print("Top Binary representation euclidean distances: " + str(etopRelevant))
         #print("Top Binary representation cosine similarity: " + str(ctopRelevant))
