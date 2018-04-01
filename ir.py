@@ -42,9 +42,13 @@ with open('scores.csv', 'w', newline='') as csvfile:
         tf_matrix = tf_vectorizer.fit_transform(corpus)
         tfidf_matrix = tfidf_vectorizer.fit_transform(corpus)
 
-        # compute similarity between query and all docs and get top 10 relevant
+        # compute similarity between query and all docs
+
+        # Binary representation
+        # Euclidean distance
         esim = np.array(euclidean_distances(count_matrix[len(corpus)-1], count_matrix[0:(len(corpus)-1)])[0])
         #etopRelevant = esim.argsort()[:10]+1
+        # Cosine similarity measure
         csim = np.array(cosine_similarity(count_matrix[len(corpus)-1], count_matrix[0:(len(corpus)-1)])[0])
         #ctopRelevant = csim.argsort()[-10:][::-1]+1
         #print("Top Binary representation euclidean distances: " + str(etopRelevant))
@@ -56,12 +60,16 @@ with open('scores.csv', 'w', newline='') as csvfile:
 
         print("\n")
 
+        # Term frequency
+        # Euclidean distance
         esim = np.array(euclidean_distances(tf_matrix[len(corpus)-1], tf_matrix[0:(len(corpus)-1)])[0])
         #etopRelevant = esim.argsort()[:10]+1
+        # Cosine similarity measure
         csim = np.array(cosine_similarity(tf_matrix[len(corpus)-1], tf_matrix[0:(len(corpus)-1)])[0])
         #ctopRelevant = csim.argsort()[-10:][::-1]+1
         #print("Top Term frequency euclidean distances: " + str(etopRelevant))
         #print("Top Term frequency cosine similarity: " + str(ctopRelevant))
+        # Calculating relevance scores
         escores2 = precision_recall_fscore_support(relevance, esim.argsort()[:len(relevance)]+1, average='micro')
         cscores2 = precision_recall_fscore_support(relevance, csim.argsort()[-len(relevance):][::-1]+1, average='micro')
         print("Term frequency euclidean scores: Precision: " + str(escores2[0]) + ", Recall: " + str(escores2[1]) + ", F-Score: " + str(escores2[2]))
@@ -69,12 +77,16 @@ with open('scores.csv', 'w', newline='') as csvfile:
 
         print("\n")
 
+        # TF-IDF
+        # Euclidean distance
         esim = np.array(euclidean_distances(tfidf_matrix[len(corpus)-1], tfidf_matrix[0:(len(corpus)-1)])[0])
         #etopRelevant = esim.argsort()[:10]+1
+        # Cosine similarity measure
         csim = np.array(cosine_similarity(tfidf_matrix[len(corpus)-1], tfidf_matrix[0:(len(corpus)-1)])[0])
         #ctopRelevant = csim.argsort()[-10:][::-1]+1
         #print("Top TF-IDF euclidean distances: " + str(etopRelevant))
         #print("Top TF-IDF cosine similarity: " + str(ctopRelevant))
+        # Calculating relevance scores
         escores3 = precision_recall_fscore_support(relevance, esim.argsort()[:len(relevance)]+1, average='micro')
         cscores3 = precision_recall_fscore_support(relevance, csim.argsort()[-len(relevance):][::-1]+1, average='micro')
         print("TF-IDF euclidean scores: Precision: " + str(escores3[0]) + ", Recall: " + str(escores3[1]) + ", F-Score: " + str(escores3[2]))
@@ -83,6 +95,7 @@ with open('scores.csv', 'w', newline='') as csvfile:
         print("\n")
         print("\n")
 
+        # Writing to .csv
         scorewriter.writerow([q,
         escores1[0], escores1[1], escores1[2], cscores1[0], cscores1[1], cscores1[2],
         escores2[0], escores2[1], escores2[2], cscores2[0], cscores2[1], cscores2[2],
